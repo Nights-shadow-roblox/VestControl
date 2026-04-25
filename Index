@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Haptic Feedback - Advanced Control</title>
+    <style>
+        :root {
+            --bg: #0b0f19;
+            --card-bg: #161b2c;
+            --accent: #00d4ff;
+            --danger: #ff4d4d;
+            --safety: #00ff88;
+            --text: #e2e8f0;
+        }
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            display: flex;
+            justify-content: center;
+            padding: 20px;
+        }
+        .container {
+            width: 100%;
+            max-width: 700px;
+        }
+        header {
+            text-align: center;
+            padding-bottom: 30px;
+            border-bottom: 2px solid #1e293b;
+            margin-bottom: 30px;
+        }
+        h1 { margin: 0; color: var(--accent); letter-spacing: 2px; }
+        .master-card {
+            background: linear-gradient(145deg, #1e293b, #0f172a);
+            border: 2px solid var(--accent);
+            border-radius: 16px;
+            padding: 25px;
+            margin-bottom: 30px;
+            box-shadow: 0 0 20px rgba(0, 212, 255, 0.2);
+        }
+        .card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border: 1px solid #2d3748;
+        }
+        .card h2 {
+            margin: 0 0 15px 0;
+            font-size: 1.1rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #94a3b8;
+        }
+        .slider-group {
+            margin-bottom: 20px;
+        }
+        .slider-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+        }
+        .label { font-weight: 500; font-size: 0.95rem; }
+        .value { font-family: monospace; color: var(--accent); font-weight: bold; }
+        input[type="range"] {
+            width: 100%;
+            height: 6px;
+            background: #2d3748;
+            border-radius: 5px;
+            outline: none;
+            accent-color: var(--accent);
+        }
+        .danger-slider { accent-color: var(--danger) !important; }
+        .weather-slider { accent-color: var(--safety) !important; }
+        .footer-btns { display: flex; gap: 10px; }
+        button {
+            flex: 1;
+            padding: 15px;
+            border: none;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .btn-sync { background: var(--accent); color: #000; }
+        .btn-sync:hover { background: #fff; box-shadow: 0 0 15px var(--accent); }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>HAPTIC INTERFACE</h1>
+        <p style="opacity: 0.6;">Hardware Version 3.0 | Synced</p>
+    </header>
+
+    <!-- Master Control -->
+    <div class="master-card">
+        <div class="slider-header">
+            <span class="label" style="color: var(--accent);">GLOBAL INTENSITY MULTIPLIER</span>
+            <span class="value" id="master-val">100%</span>
+        </div>
+        <input type="range" id="master-slider" min="0" max="1000" value="100" oninput="syncAll()">
+        <p style="font-size: 0.8rem; margin-top: 10px; opacity: 0.7;">Scales all sub-settings relative to their current values.</p>
+    </div>
+
+    <!-- Environmental (Good Senses) -->
+    <div class="card">
+        <h2>Environmental & Ambience</h2>
+        <div class="slider-group">
+            <div class="slider-header"><span class="label">Weather (Rain/Snow/Wind)</span><span class="value haptic-val">500%</span></div>
+            <input type="range" class="weather-slider haptic-input" min="0" max="20000" value="500" oninput="updateUI()">
+        </div>
+        <div class="slider-group">
+            <div class="slider-header"><span class="label">Surface Texture (Grass/Water)</span><span class="value haptic-val">250%</span></div>
+            <input type="range" class="weather-slider haptic-input" min="0" max="20000" value="250" oninput="updateUI()">
+        </div>
+    </div>
+
+    <!-- Combat & Trauma (Pain Senses) -->
+    <div class="card">
+        <h2>Combat Feedback (Pain)</h2>
+        <div class="slider-group">
+            <div class="slider-header"><span class="label">Ballistic Impact (Gunshots)</span><span class="value haptic-val">1200%</span></div>
+            <input type="range" class="danger-slider haptic-input" min="0" max="20000" value="1200" oninput="updateUI()">
+        </div>
+        <div class="slider-group">
+            <div class="slider-header"><span class="label">Explosives (Pressure Wave)</span><span class="value haptic-val">2000%</span></div>
+            <input type="range" class="danger-slider haptic-input" min="0" max="20000" value="2000" oninput="updateUI()">
+        </div>
+        <div class="slider-group">
+            <div class="slider-header"><span class="label">Melee/Laceration</span><span class="value haptic-val">800%</span></div>
+            <input type="range" class="danger-slider haptic-input" min="0" max="20000" value="800" oninput="updateUI()">
+        </div>
+    </div>
+
+    <!-- Physics & Movement -->
+    <div class="card">
+        <h2>Physics & Interaction</h2>
+        <div class="slider-group">
+            <div class="slider-header"><span class="label">G-Force / Acceleration</span><span class="value haptic-val">150%</span></div>
+            <input type="range" class="haptic-input" min="0" max="20000" value="150" oninput="updateUI()">
+        </div>
+        <div class="slider-group">
+            <div class="slider-header"><span class="label">Object Weight/Resistance</span><span class="value haptic-val">400%</span></div>
+            <input type="range" class="haptic-input" min="0" max="20000" value="400" oninput="updateUI()">
+        </div>
+    </div>
+
+    <div class="footer-btns">
+        <button style="background: #334155; color: white;" onclick="location.reload()">Reset All</button>
+        <button class="btn-sync" onclick="alert('Configuration Uploaded Successfully')">Sync to Vest</button>
+    </div>
+</div>
+
+<script>
+    // Store original values to allow master scaling without losing relative balance
+    let originals = Array.from(document.querySelectorAll('.haptic-input')).map(i => parseInt(i.value));
+
+    function updateUI() {
+        const inputs = document.querySelectorAll('.haptic-input');
+        const values = document.querySelectorAll('.haptic-val');
+        const master = document.getElementById('master-slider').value / 100;
+
+        inputs.forEach((input, index) => {
+            const displayVal = Math.round(input.value * master);
+            values[index].textContent = displayVal + '%';
+        });
+    }
+
+    function syncAll() {
+        document.getElementById('master-val').textContent = document.getElementById('master-slider').value + '%';
+        updateUI();
+    }
+
+    // Initialize UI on load
+    updateUI();
+</script>
+
+</body>
+</html>
