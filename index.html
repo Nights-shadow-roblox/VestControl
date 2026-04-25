@@ -12,6 +12,7 @@
             --danger: #ff4d4d;   /* Pain Red */
             --nature: #00ff88;   /* Weather Green */
             --social: #a855f7;   /* Human Purple */
+            --special: #ff69b4;  /* Special Human Pink */
             --text: #e2e8f0;
         }
         body {
@@ -87,6 +88,9 @@
         .pain-slider { accent-color: var(--danger) !important; }
         .weather-slider { accent-color: var(--nature) !important; }
         .social-slider { accent-color: var(--social) !important; }
+        .special-slider { accent-color: var(--special) !important; }
+
+        hr { border: 0; border-top: 1px dashed #2d3748; margin: 20px 0; }
 
         /* Footer */
         .footer-btns { display: flex; gap: 10px; margin-top: 30px; }
@@ -122,9 +126,10 @@
         <input type="range" id="master-slider" min="0" max="1000" value="100" oninput="updateAll()">
     </div>
 
-    <!-- Social & Human Interaction (Purple) -->
+    <!-- Social & Human Interaction (Purple + Pink) -->
     <div class="card">
-        <h2>Social & Human Interaction</h2>
+        <h2>Social & Special Interaction</h2>
+        <!-- Standard -->
         <div class="slider-group">
             <div class="slider-header"><span class="label">Gentle Touch (Hugs/Handshakes)</span><span class="value haptic-val" style="color: var(--social)">300%</span></div>
             <input type="range" class="social-slider haptic-input" min="0" max="20000" value="300" oninput="updateAll()">
@@ -132,6 +137,18 @@
         <div class="slider-group">
             <div class="slider-header"><span class="label">Collision (Bumping into Players)</span><span class="value haptic-val" style="color: var(--social)">600%</span></div>
             <input type="range" class="social-slider haptic-input" min="0" max="20000" value="600" oninput="updateAll()">
+        </div>
+
+        <hr>
+
+        <!-- Special Human -->
+        <div class="slider-group">
+            <div class="slider-header"><span class="label">Intimate Proximity (Heartbeat Sync)</span><span class="value haptic-val" style="color: var(--special)">1200%</span></div>
+            <input type="range" class="special-slider haptic-input" min="0" max="20000" value="1200" oninput="updateAll()">
+        </div>
+        <div class="slider-group">
+            <div class="slider-header"><span class="label">Neural Link (Shared Sensation)</span><span class="value haptic-val" style="color: var(--special)">2000%</span></div>
+            <input type="range" class="special-slider haptic-input" min="0" max="20000" value="2000" oninput="updateAll()">
         </div>
     </div>
 
@@ -187,16 +204,12 @@
         const displays = document.querySelectorAll('.haptic-val');
 
         inputs.forEach((input, index) => {
-            // Calculate real-time scaled value
             const scaledValue = Math.round(input.value * multiplier);
             displays[index].textContent = scaledValue + '%';
         });
     }
-
-    // Initialize values on page load
     updateAll();
 </script>
 
 </body>
 </html>
-
